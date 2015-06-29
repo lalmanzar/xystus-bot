@@ -6,7 +6,7 @@ var _ = require('lodash');
 
 var router = express.Router();
 var lastId = -1;
-var interval;
+var interval = setInterval(getUpdates, 500);
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -44,7 +44,7 @@ var getUpdates = function (res) {
         debug(info);
         _.forEach(info.result, function (update) {
           debug("updateID: " + update.update_id);
-          if (update.update_id > lastId) {
+          if (update.update_id > lastId && !!update.message.text) {
             lastId = update.update_id;
             var sendMessageCallback = function (msg) {
               debug(msg);
@@ -98,5 +98,4 @@ router.get('/stop_longPolling', function (req, res, next) {
     res.send('Stopped Long Polling');
   }
 });
-
 module.exports = router;
