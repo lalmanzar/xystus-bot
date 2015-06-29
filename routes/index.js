@@ -47,9 +47,9 @@ router.post('/webhook', function (req, res, next) {
   debug(req.body);
   if (req.body.update_id > lastId) {
     lastId = req.body.update_id;
-    if (req.body.message.text === '/boobs' || req.body.message.text.indexOf('/boobs ') === 0) {
+    if (req.body.message.text === '\/boobs' || req.body.message.text.indexOf('\/boobs ') === 0) {
 
-    } else if (req.body.message.text === '/butts' || req.body.message.text.indexOf('/butts ') === 0) {
+    } else if (req.body.message.text === '\/butts' || req.body.message.text.indexOf('\/butts ') === 0) {
       request('http://api.obutts.ru/noise/1', function (error, response, body) {
         var url = config.telegram.url() + 'sendMessage';        
         if (!error && response.statusCode == 200) {
