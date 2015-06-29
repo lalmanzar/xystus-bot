@@ -17,13 +17,13 @@ router.get('/', function (req, res, next) {
 router.get('/me', function (req, res, next) {
   bot.getMe().then(function (me) {
     res.send('Hi my name is '+ me.first_name +'!');
-  });
+  }).catch(function() {});
 });
 
 router.get('/updates', function (req, res, next) {
   bot.getUpdates().then(function(updates) {
     res.send(updates);
-  });
+  }).catch(function() {});
 });
 
 bot.on('message', function(msg){

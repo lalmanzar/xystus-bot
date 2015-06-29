@@ -10,11 +10,11 @@
         if (imageArray.length > 0) {
           var url = 'http://media.' + imgType + '.ru/' + imageArray[0].preview;
           var image = request(url);
-          bot.sendPhoto(chatId, image);
+          bot.sendPhoto(chatId, image).catch(function() {});
           return;
         }
       }
-      bot.sendMessage(chatId, 'Image Error');
+      bot.sendMessage(chatId, 'Image Error').catch(function() {});;
     });
   };
 
