@@ -27,48 +27,44 @@ router.get('/updates', function (req, res, next) {
 });
 
 var getUpdates = function (res) {
-  var url = config.telegram.url() + 'getUpdates';
-  debug('requesting url: ' + url);
+  var getUpdatesUrl = config.telegram.url() + 'getUpdates';
+  debug('requesting url: ' + getUpdatesUrl);
+  debug('lastId: ' + lastId);
   request({
-    url: url, //URL to hit
+    url: getUpdatesUrl, //URL to hit
     qs: { offset: lastId + 1 }, //Query string data
     method: 'GET', //Specify the method
   }, function (error, response, body) {
+      var url = config.telegram.url() + 'sendMessage';
+      debug(res);
       if (res) {
         res.send(body);
       } else {
         var info = JSON.parse(body);
-        _(info.result).forEach(function (update) {
+        debug(info);
+        _.forEach(info.result, function (update) {
+          debug("updateID: " + update.update_id);
           if (update.update_id > lastId) {
             lastId = update.update_id;
+            var sendMessageCallback = function (msg) {
+              debug(msg);
+              request(
+                {
+                  url: url, //URL to hit
+                  qs: {
+                    chat_id: update.message.chat.id,
+                    text: msg
+                  }, //Query string data
+                  method: 'GET', //Specify the method
+                });
+            };
             if (update.message.text === '\/boobs' || update.message.text.indexOf('\/boobs ') === 0) {
-
+              _.times(5, function(){
+                sendNsfwMedia('oboobs', sendMessageCallback);
+              });
             } else if (update.message.text === '\/butts' || update.message.text.indexOf('\/butts ') === 0) {
-              request('http://api.obutts.ru/noise/1', function (error, response, body) {
-                var url = config.telegram.url() + 'sendMessage';
-                if (!error && response.statusCode == 200) {
-                  var imageArray = JSON.parse(body);
-                  var image = imageArray.length > 0 ? 'http://media.oboobs.ru/' + imageArray[0].preview : 'Image error';
-                  request(
-                    {
-                      url: url, //URL to hit
-                      qs: {
-                        chat_id: update.message.chat.id,
-                        text: image
-                      }, //Query string data
-                      method: 'GET', //Specify the method
-                    });
-                } else {
-                  request(
-                    {
-                      url: url, //URL to hit
-                      qs: {
-                        chat_id: update.message.chat.id,
-                        text: 'Image Error'
-                      }, //Query string data
-                      method: 'GET', //Specify the method
-                    });
-                }
+              _.times(5, function(){
+                sendNsfwMedia('obutts', sendMessageCallback);
               });
             }
           }
@@ -77,13 +73,29 @@ var getUpdates = function (res) {
     });
 };
 
+var sendNsfwMedia = function (imgType, callback) {
+  debug(imgType);
+  request('http://api.' + imgType + '.ru/noise/1', function (error, response, body) {
+    debug(body);
+    if (!error && response.statusCode == 200) {
+      var imageArray = JSON.parse(body);
+      var image = imageArray.length > 0 ? 'http://media.' + imgType + '.ru/' + imageArray[0].preview : 'Image Error';
+      callback(image)
+    } else {
+      callback('Image Error');
+    }
+  });
+};
+
 router.get('/set_longPolling', function (req, res, next) {
   interval = setInterval(getUpdates, 500);
+  res.send('started Long Polling');
 });
 
 router.get('/stop_longPolling', function (req, res, next) {
   if (interval) {
     clearInterval(interval);
+    res.send('Stopped Long Polling');
   }
 });
 
