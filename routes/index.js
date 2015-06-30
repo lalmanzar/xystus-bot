@@ -1,9 +1,10 @@
+/// <reference path="../typings/node/node.d.ts"/>
 var express = require('express');
 var request = require('request');
 var config = require('../config.js');
 var debug = require('debug')('indexRoute');
 var _ = require('lodash');
-var Telegram = require('telegram-bot-api')
+var Telegram = require('node-telegram-bot-api')
 var bot = new Telegram(config.telegram.secretToken);
 function setupPolling(){
   bot._polling(200).catch(setupPolling);
