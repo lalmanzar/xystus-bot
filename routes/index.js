@@ -4,7 +4,11 @@ var config = require('../config.js');
 var debug = require('debug')('indexRoute');
 var _ = require('lodash');
 var Telegram = require('telegram-bot-api')
-var bot = new Telegram(config.telegram.secretToken, { polling: true });
+var bot = new Telegram(config.telegram.secretToken);
+function setupPolling(){
+  bot._polling(200).catch(setupPolling);
+}
+setupPolling();
 var pluginsModules = require('require-all')(__dirname + '/../modules');
 
 var router = express.Router();
@@ -33,4 +37,5 @@ bot.on('message', function(msg){
     plugin.proccess(msg, bot);
   }).value();
 });
+
 module.exports = router;
