@@ -8,7 +8,8 @@
       if (!error && response.statusCode == 200) {
         var imageArray = JSON.parse(body);
         if (imageArray.length > 0) {
-          var url = 'http://media.' + imgType + '.ru/' + imageArray[0].preview;
+          var imagename = imageArray[0].preview.replace('_preview', '');
+          var url = 'http://media.' + imgType + '.ru/' + imagename;
           var image = request(url);
           bot.sendPhoto(chatId, image).catch(function() {});
           return;
