@@ -21,7 +21,7 @@
         
         var imageArray = JSON.parse(response.body);
         if (imageArray.length > 0) {
-          var imagename = imageArray[0].preview;
+          var imagename = imageArray[0].preview.replace('_preview', '');
           var url = 'http://media.' + imgType + '.ru/' + imagename;
           var image = request(url);
           return bot.sendPhoto(chatId, image).catch(function (e) {
