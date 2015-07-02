@@ -8,17 +8,14 @@
       if (!error && response.statusCode == 200) {
         var imageArray = JSON.parse(body);
         if (imageArray.length > 0) {
-          var imagename = imageArray[0].preview.replace('_preview', '');
+          var imagename = imageArray[0].preview;
           var url = 'http://media.' + imgType + '.ru/' + imagename;
           var image = request(url);
-          bot.sendPhoto(chatId, image).catch(function(e) {
-            console.log(e);
-            bot.sendMessage(chatId, 'Image Error').catch(function() {});
+          return bot.sendPhoto(chatId, image).catch(function() {
           });
-          return;
         }
       }
-      bot.sendMessage(chatId, 'Image Error').catch(function() {});
+      return bot.sendMessage(chatId, 'Image Error').catch(function() {});
     });
   };
 
@@ -28,8 +25,11 @@
     },
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
-      _.times(5, function () {
-        sendNsfwMedia(imgType, bot, message.chat.id);
+      var promise = sendNsfwMedia(imgType, bot, message.chat.id);
+      _.times(4, function () {
+        promise = promise.finally(function () {
+          return sendNsfwMedia(imgType, bot, message.chat.id);
+        });
       });
     }
   };
