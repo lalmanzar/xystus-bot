@@ -2,20 +2,35 @@
 (function () {
   var request = require('request');
   var _ = require('lodash');
+  var Promise = require("bluebird");
+  var request = require("request");
+  var URL = require('url');
+  var requestPromise = Promise.promisify(request);
 
   var sendNsfwMedia = function (imgType, bot, chatId) {
-    request('http://api.' + imgType + '.ru/noise/1', function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var imageArray = JSON.parse(body);
+    var options = {
+      url: URL.format({
+        protocol: 'http',
+        host: 'api.' + imgType + '.ru',
+        pathname: '/noise/1'
+      })
+    };
+    return requestPromise(options).then(function (contents) {
+      var response = contents[0];
+      if (response.statusCode == 200) {
+        
+        var imageArray = JSON.parse(response.body);
         if (imageArray.length > 0) {
           var imagename = imageArray[0].preview;
           var url = 'http://media.' + imgType + '.ru/' + imagename;
           var image = request(url);
-          return bot.sendPhoto(chatId, image).catch(function() {
+          return bot.sendPhoto(chatId, image).catch(function (e) {
+            console.log(e);
           });
         }
       }
-      return bot.sendMessage(chatId, 'Image Error').catch(function() {});
+    }).catch(function (error) {
+      return bot.sendMessage(chatId, 'Image Error').catch(function () { });
     });
   };
 
