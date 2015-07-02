@@ -3,11 +3,14 @@
   var request = require('request');
   var _ = require('lodash');
   var Promise = require("bluebird");
-  var request = require("request");
   var URL = require('url');
   var requestPromise = Promise.promisify(request);
 
-  var sendNsfwMedia = function (imgType, bot, chatId) {
+  var sendNsfwMedia = function (imgType, bot, chatId, count) {
+    count = count || 1;
+    if(count > 3){
+      return;
+    }
     var options = {
       url: URL.format({
         protocol: 'http',
@@ -26,11 +29,13 @@
           var image = request(url);
           return bot.sendPhoto(chatId, image).catch(function (e) {
             console.log(e);
+            return sendNsfwMedia(imgType, bot, chatId, count + 1);
           });
         }
       }
     }).catch(function (error) {
-      return bot.sendMessage(chatId, 'Image Error').catch(function () { });
+      console.log(error);
+      return sendNsfwMedia(imgType, bot, chatId, count + 1);
     });
   };
 
