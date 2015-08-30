@@ -20,15 +20,15 @@
     };
     console.log('working with ' + options.url);
     return requestPromise(options).then(function (contents) {
-      console.log(contents);
       var response = contents[0];
-      console.log(response);
       if (response.statusCode == 200) {
         
         var imageArray = JSON.parse(response.body);
         if (imageArray.length > 0) {
-          var imagename = imageArray[0].preview.replace('_preview', '');
+          //var imagename = imageArray[0].preview.replace('_preview', '');
+          var imagename = imageArray[0].preview;
           var url = 'http://media.' + imgType + '.ru/' + imagename;
+          console.log(url);
           var image = request(url);
           return bot.sendPhoto(chatId, image).catch(function (e) {
             console.log(e);
