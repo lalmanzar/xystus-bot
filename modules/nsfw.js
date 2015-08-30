@@ -30,7 +30,9 @@
           var url = 'http://media.' + imgType + '.ru/' + imagename;
           console.log(url);
           var image = request(url);
-          return bot.sendPhoto(chatId, image).catch(function (e) {
+          return bot.sendPhoto(chatId, image).then(function(){
+            console.log("success sending "+ url);
+          }).catch(function (e) {
             console.log(e);
             return sendNsfwMedia(imgType, bot, chatId, count + 1);
           });
@@ -50,7 +52,7 @@
     },
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
-      bot.sendMessage(message.chat.id, 'Ok. let me get that.');
+      bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
       var promise = sendNsfwMedia(imgType, bot, message.chat.id);
       _.times(4, function () {
         promise = promise.finally(function () {
