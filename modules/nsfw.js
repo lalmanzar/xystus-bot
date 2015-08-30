@@ -19,31 +19,43 @@
       })
     };
     console.log('working with ' + options.url);
-    return requestPromise(options).then(function (contents) {
-      var response = contents[0];
-      if (response.statusCode == 200) {
-        
-        var imageArray = JSON.parse(response.body);
-        if (imageArray.length > 0) {
-          //var imagename = imageArray[0].preview.replace('_preview', '');
-          var imagename = imageArray[0].preview;
-          var url = 'http://media.' + imgType + '.ru/' + imagename;
-          console.log(url);
-          var image = request(url);
-          return bot.sendPhoto(chatId, image).then(function(){
-            console.log("success sending "+ url);
-          }).catch(function (e) {
-            console.log(e);
-            return sendNsfwMedia(imgType, bot, chatId, count + 1);
-          });
+    return requestPromise(options)
+      .then(function(contents){
+        var response = contents[0];
+        return response;
+      }).then(function(response) {
+        if (response.statusCode == 200) {
+          return JSON.parse(response.body)
         }
-      }else {
-        bot.sendMessage(chatId, 'Error With api. Error code: ' + response.statusCode);
-      }
-    }).catch(function (error) {
-      console.log(error);
-      return sendNsfwMedia(imgType, bot, chatId, count + 1);
-    });
+        return false;
+      }).then(function(imageArray){
+        if(imageArray){
+          return imageArray[0].preview;
+        }
+      }).then(function(imagePreview){
+        var url = 'http://media.' + imgType + '.ru/' + imagePreview.replace('_preview', '');
+        return requestPromise(url).then(function(){
+          console.log(url);
+          return bot.sendPhoto(chatId, request(url)).then(function(){
+              console.log("success sending "+ url);
+            }).catch(function (e) {
+              console.log("error sending image. Retrying");
+              return sendNsfwMedia(imgType, bot, chatId, count + 1);
+            });
+        }).catch(function() {
+          url = 'http://media.' + imgType + '.ru/' + imagePreview;
+          console.log(url);
+          return bot.sendPhoto(chatId, request(url)).then(function(){
+              console.log("success sending "+ url);
+            }).catch(function (e) {
+              console.log("error sending image. Retrying");
+              return sendNsfwMedia(imgType, bot, chatId, count + 1);
+            });
+        })
+      })
+      .catch(function(e){
+        bot.sendMessage(chatId, 'Error With api');
+      });
   };
 
   module.exports = {
