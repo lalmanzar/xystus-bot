@@ -18,8 +18,11 @@
         pathname: '/noise/1'
       })
     };
+    console.log('working with ' + options.url);
     return requestPromise(options).then(function (contents) {
+      console.log(contents);
       var response = contents[0];
+      console.log(response);
       if (response.statusCode == 200) {
         
         var imageArray = JSON.parse(response.body);
@@ -47,6 +50,7 @@
     },
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
+      bot.sendMessage(message.chat.id, 'Ok. let me get that.');
       var promise = sendNsfwMedia(imgType, bot, message.chat.id);
       _.times(4, function () {
         promise = promise.finally(function () {
