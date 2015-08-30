@@ -32,6 +32,8 @@
             return sendNsfwMedia(imgType, bot, chatId, count + 1);
           });
         }
+      }else {
+        bot.sendMessage(chatId, 'Error With api. Error code: ' + response.statusCode);
       }
     }).catch(function (error) {
       console.log(error);
