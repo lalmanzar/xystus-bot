@@ -6,11 +6,7 @@
   var URL = require('url');
   var requestPromise = Promise.promisify(request);
 
-  var sendNsfwMedia = function (imgType, bot, chatId, count) {
-    count = count || 1;
-    if(count > 3){
-      return;
-    }
+  var sendNsfwMedia = function (imgType, bot, chatId) {
     var options = {
       url: URL.format({
         protocol: 'http',
@@ -40,17 +36,16 @@
           return bot.sendPhoto(chatId, request(url)).then(function(){
               console.log("success sending "+ url);
             }).catch(function (e) {
-              console.log("error sending image. Retrying");
-              return sendNsfwMedia(imgType, bot, chatId, count + 1);
+              console.log("error sending image.");
+console.log(e);
             });
         }).catch(function() {
           url = 'http://media.' + imgType + '.ru/' + imagePreview;
-          console.log(url);
           return bot.sendPhoto(chatId, request(url)).then(function(){
               console.log("success sending "+ url);
             }).catch(function (e) {
-              console.log("error sending image. Retrying");
-              return sendNsfwMedia(imgType, bot, chatId, count + 1);
+              console.log("error sending image.");
+             console.log(e) ;
             });
         })
       })
