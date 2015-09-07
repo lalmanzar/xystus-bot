@@ -6,11 +6,7 @@
   var URL = require('url');
   var requestPromise = Promise.promisify(request);
 
-  var sendNsfwMedia = function (imgType, bot, chatId, count) {
-    count = count || 1;
-    if(count > 3){
-      return;
-    }
+  var sendNsfwMedia = function (imgType, bot, chatId) {
     var options = {
       url: URL.format({
         protocol: 'http',
