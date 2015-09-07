@@ -36,26 +36,23 @@
         var url = 'http://media.' + imgType + '.ru/' + imagePreview.replace('_preview', '');
         return requestPromise(url).then(function(contents){
           console.log(contents[0].statusCode);
-          console.log(url);
-          return bot.sendPhoto(chatId, request(url)).then(function(){
-              console.log("success sending "+ url);
-            }).catch(function (e) {
-              console.log("error sending image. Retrying");
-              return sendNsfwMedia(imgType, bot, chatId, count + 1);
-            });
-        }).catch(function() {
-          url = 'http://media.' + imgType + '.ru/' + imagePreview;
-          console.log(url);
-          return bot.sendPhoto(chatId, request(url)).then(function(){
-              console.log("success sending "+ url);
-            }).catch(function (e) {
-              console.log("error sending image. Retrying");
-              return sendNsfwMedia(imgType, bot, chatId, count + 1);
-            });
-        })
+          if(contents[0].statusCode == 200) {
+            console.log(url);
+            return bot.sendPhoto(chatId, request(url)).then(function(){
+                console.log("success sending "+ url);
+              });
+          } else {
+            url = 'http://media.' + imgType + '.ru/' + imagePreview;
+            console.log(url);
+            return bot.sendPhoto(chatId, request(url)).then(function(){
+                console.log("success sending "+ url);
+              });
+          }
+        });
       })
       .catch(function(e){
-        bot.sendMessage(chatId, 'Error With api');
+        console.log(e);
+        bot.sendMessage(chatId, 'Error');
       });
   };
 
@@ -66,11 +63,8 @@
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
       bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
-      var promise = sendNsfwMedia(imgType, bot, message.chat.id);
-      _.times(4, function () {
-        promise = promise.finally(function () {
-          return sendNsfwMedia(imgType, bot, message.chat.id);
-        });
+      _.times(5, function () {
+          sendNsfwMedia(imgType, bot, message.chat.id);
       });
     }
   };
