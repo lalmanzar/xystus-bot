@@ -54,10 +54,18 @@
 
   module.exports = {
     isSupported: function (message) {
-      return !!message.text && (message.text === '\/boobs' || message.text.indexOf('\/boobs ') === 0 || message.text === '\/butts' || message.text.indexOf('\/butts ') === 0);
+      return !!message.text && (
+        message.text === '\/boobs' || 
+        message.text.indexOf('\/boobs ') === 0 || 
+        message.text === '\/butts' || 
+        message.text.indexOf('\/butts ') === 0);
     },
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
+      if(imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
+        bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
+        return;
+      }
       bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
       _.times(5, function () {
           sendNsfwMedia(imgType, bot, message.chat.id);
