@@ -14,6 +14,10 @@ var pluginsModules = require('require-all')(__dirname + '/../modules');
 
 var router = express.Router();
 
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.send('Xystus\' bot says: Hello!');
@@ -32,6 +36,11 @@ router.get('/updates', function (req, res, next) {
 });
 
 bot.on('message', function(msg){
+  msg = msg.trim();
+  if(endsWith(msg, '@XystusBot')){
+    msg = msg.slice(0, -10);
+  }
+  msg = msg.
   _(pluginsModules).filter(function(plugin){
     return plugin.isSupported(msg);
   }).forEach(function(plugin){
