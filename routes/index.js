@@ -40,7 +40,6 @@ bot.on('message', function(msg){
   if(endsWith(msg, '@XystusBot')){
     msg = msg.slice(0, -10);
   }
-  msg = msg.
   _(pluginsModules).filter(function(plugin){
     return plugin.isSupported(msg);
   }).forEach(function(plugin){
