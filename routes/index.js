@@ -33,10 +33,11 @@ router.get('/updates', function (req, res, next) {
 
 bot.on('message', function(msg){
   msg = msg.trim();
+  console.log(msg);
   if(msg.indexOf('@XystusBot', msg.length - 10) !== -1){
     msg = msg.slice(0, -10);
   }
-  
+  console.log(msg);
   _(pluginsModules).filter(function(plugin){
     return plugin.isSupported(msg);
   }).forEach(function(plugin){
