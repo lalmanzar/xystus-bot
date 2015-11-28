@@ -36,6 +36,7 @@ bot.on('message', function(msg){
   if(msg.indexOf('@XystusBot', msg.length - 10) !== -1){
     msg = msg.slice(0, -10);
   }
+  
   _(pluginsModules).filter(function(plugin){
     return plugin.isSupported(msg);
   }).forEach(function(plugin){
