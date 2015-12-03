@@ -62,10 +62,10 @@
     },
     proccess: function (message, bot) {
       var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
-      if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
-        bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
-        return;
-      }
+      // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
+      //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
+      //   return;
+      // }
       bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
       _.times(5, function () {
         sendNsfwMedia(imgType, bot, message.chat.id);
