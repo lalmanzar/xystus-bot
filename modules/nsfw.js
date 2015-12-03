@@ -66,6 +66,7 @@
       //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
       //   return;
       // }
+      
       bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
       _.times(5, function () {
         sendNsfwMedia(imgType, bot, message.chat.id);
