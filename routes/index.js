@@ -32,6 +32,9 @@ router.get('/updates', function (req, res, next) {
 });
 
 bot.on('message', function(msg){
+  if(_.isEmpty(msg.text)) {
+    return;
+  }
   if(msg.text.indexOf('@XystusBot', msg.text.length - 10) !== -1){
     msg.text = msg.text.slice(0, -10);
   }
