@@ -1,13 +1,13 @@
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
-var config = require('../config.js');
+var config = require('./config.js');
 var TelegramBot = require('node-telegram-bot-api')
 var _ = require('lodash');
 var pluginsModules = require('require-all')(__dirname + '/modules');
 
 var bot = new TelegramBot(config.telegram.secretToken, config.telegram.options);
-bot.setWebHook(config.telegram.appUrl + '/' + config.telegram.secretToken, config.telegra.options.webHook.cert);
+bot.setWebHook(config.telegram.appUrl + '/' + config.telegram.secretToken, config.telegram.options.webHook.cert);
 
 
 _(pluginsModules).forEach(function(plugin){
