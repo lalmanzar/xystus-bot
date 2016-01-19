@@ -14,6 +14,6 @@
     "bluebird": "^2.9.30",
     "request": "^2.58.0",
     "require-all": "^1.1.0",
-    "telegram-bot-api": "lalmanzar/node-telegram-bot-api"
+    "telegram-bot-api": "^0.19.2"
   }
 }

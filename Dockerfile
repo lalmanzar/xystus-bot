@@ -9,5 +9,7 @@ WORKDIR /opt/app
 ADD . /opt/app
  
 ENV PORT 80
+ENV PORT 443
 EXPOSE 80
+EXPOSE 443
 ENTRYPOINT ["npm", "start"]

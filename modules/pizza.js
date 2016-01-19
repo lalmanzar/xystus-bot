@@ -26,9 +26,7 @@
   ];
 
   module.exports = {
-    isSupported: function (message) {
-      return !!message.text && message.text.toLowerCase().indexOf('pizza') >= 0;
-    },
+    regex: /pizza/,
     proccess: function (message, bot) {
       bot.sendMessage(message.chat.id, _.sample(pizzaQuotes).concat(' 🍕😄'));
     }
