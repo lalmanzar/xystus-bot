@@ -26,7 +26,7 @@
   ];
 
   module.exports = {
-    regex: /pizza/,
+    regex: /pizza/i,
     proccess: function (message, bot) {
       bot.sendMessage(message.chat.id, _.sample(pizzaQuotes).concat(' 🍕😄'));
     }

@@ -53,7 +53,7 @@
     };
 
     module.exports = {
-        regex: [/^\/boobs\@?/, /^\/butts\@?/],
+        regex: [/^\/boobs\@?/i, /^\/butts\@?/i],
         proccess: function (message, bot) {
             var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
             // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
