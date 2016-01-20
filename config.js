@@ -3,7 +3,7 @@
         secretToken: process.env.TELEGRAM_BOT_TOKEN || '',
         options: {
             webHook: {
-                port: 443,
+                port: process.env.TELEGRAM_WEBHOOK_PORT || 443,
                 key: __dirname + '/bin/sslcert/server.key',
                 cert: __dirname + '/bin/sslcert/server.crt'
             }
