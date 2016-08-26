@@ -91,6 +91,8 @@
                                 });
                         }
                     } else {
+                        console.log(response);
+                        console.debug(response);
                         reject(response.statusCode + ": " + response.body);
                     }
 
