@@ -55,16 +55,17 @@
     };
 
     var sendRandomNsfwMedia = function (bot, chatId) {
-        var filename = config.endpointSources.eporner;
+        var url = config.endpointSources.eporner;
+        console.log('Getting:' + url);
+        
         csv
-        .convert(filename)
+        .convertURL(url)
         .then(function(successData){
             var images = _.sampleSize(successData, 5);
             _.forEach(images, function(image) {
                 console.log('Sending: ' + image.image);
                 bot.sendPhoto(chatId, request(image.image))
             });
-            console.log('This shouldn\'t show');
         })
         .catch(function (e) {
             console.log(e);
