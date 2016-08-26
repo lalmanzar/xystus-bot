@@ -72,39 +72,37 @@
             uri: url, gzip: true
         };
         new requestPromise(options)
-            .then(function (contents, other) {
+            .then(function (contents) {
                 var response = contents[0];
-                console.log(other);
-                console.log(contents);
                 return response;
             }).then(function (response) {
                 if (response.statusCode == 200) {
                     return response.body;
                 }
                 return false;
+            })
+            .then(function (filename) {
+                if (filename) {
+                    return csv
+                        .convertString(filepath);
+                }
+                return false;
+            })
+            .then(function (successData) {
+                if (successData) {
+                    console.log("convertion completed.");
+                    console.log("Total images: " + successData.length);
+                    var images = _.sampleSize(successData, 5);
+                    _.forEach(images, function (image) {
+                        console.log('Sending: ' + image.image);
+                        bot.sendPhoto(chatId, request(image.image))
+                    });
+                }
+            })
+            .catch(function (e) {
+                console.log(e);
+                bot.sendMessage(chatId, 'Error');
             });
-            // .then(function (filename) {
-            //     console.log("downloaded csv");
-            //     return filename;
-            // })
-            // .then(function (filepath) {
-            //     console.log("converting to json");
-            //     return csv
-            //         .convertFile(filepath);
-            // })
-            // .then(function (successData) {
-            //     console.log("convertion completed.");
-            //     console.log("Total images: " + successData.length);
-            //     var images = _.sampleSize(successData, 5);
-            //     _.forEach(images, function (image) {
-            //         console.log('Sending: ' + image.image);
-            //         bot.sendPhoto(chatId, request(image.image))
-            //     });
-            // })
-            // .catch(function (e) {
-            //     console.log(e);
-            //     bot.sendMessage(chatId, 'Error');
-            // });
 
     };
 
