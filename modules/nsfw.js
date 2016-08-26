@@ -1,12 +1,23 @@
 /// <reference path="../typings/node/node.d.ts"/>
 (function () {
     var config = require('../config.js');
+    var fs = require('fs');
     var request = require('request');
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
-    var csv  = require('node-csvjsonlite');
+    var csv = require('node-csvjsonlite');
     var requestPromise = Promise.promisify(request);
+    var regexp = /filename=\"(.*)\"/gi;
+
+    function fsExistsSync(myDir) {
+        try {
+            fs.accessSync(myDir);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
 
     var sendNsfwMedia = function (imgType, bot, chatId) {
         var options = {
@@ -55,28 +66,43 @@
     };
 
     var sendRandomNsfwMedia = function (bot, chatId) {
+
         var url = config.endpointSources.eporner;
         console.log('Getting:' + url);
-        
-        var options = {
-            url: url
-        };
-
-        return requestPromise(options)
-            .then(function (contents) {
+        new Promise(function (resolve, reject) {
+            request({ uri: url })
+                .on('response', function (response) {
+                    console.log(response.statusCode)
+                    console.log(response.headers['content-type'])
+                    var filename = regexp.exec(response.headers['content-disposition'])[1];
+                    console.log(filename);
+                    if (fsExistsSync(filename)) {
+                        resolve(filename);
+                    }
+                    else {
+                        response
+                            .pipe(fs.createWriteStream(filename))
+                            .on('error', reject)
+                            .on('close', function () {
+                                resolve(filename);
+                            });
+                    }
+                });
+        })
+            .then(function (filename) {
                 console.log("downloaded csv");
-                return contents;
+                return filename;
             })
-            .then(function(csvString){
+            .then(function (filepath) {
                 console.log("converting to json");
                 return csv
-                    .convertString(csvString);                    
+                    .convertFile(filepath);
             })
-            .then(function(successData){
+            .then(function (successData) {
                 console.log("convertion completed.");
                 console.log("Total images: " + successData.length);
                 var images = _.sampleSize(successData, 5);
-                _.forEach(images, function(image) {
+                _.forEach(images, function (image) {
                     console.log('Sending: ' + image.image);
                     bot.sendPhoto(chatId, request(image.image))
                 });
@@ -86,7 +112,6 @@
                 bot.sendMessage(chatId, 'Error');
             });
 
-        
     };
 
     module.exports = {
@@ -97,7 +122,7 @@
             //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
             //   return;
             // }
-            if(imgType === 'random') {
+            if (imgType === 'random') {
                 sendRandomNsfwMedia(bot, message.chat.id);
                 return;
             }
