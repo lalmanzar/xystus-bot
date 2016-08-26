@@ -81,10 +81,10 @@
                 }
                 return false;
             })
-            .then(function (filename) {
-                if (filename) {
+            .then(function (csvString) {
+                if (csvString) {
                     return csv
-                        .convertString(filepath);
+                        .convertString(csvString);
                 }
                 return false;
             })
