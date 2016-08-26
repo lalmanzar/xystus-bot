@@ -3,7 +3,6 @@
     var config = require('../config.js');
     var fs = require('fs');
     var request = require('request');
-    var zlib = require('zlib');
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
@@ -69,64 +68,43 @@
 
         var url = config.endpointSources.eporner;
         console.log('Getting:' + url);
-
-        new Promise(function (resolve, reject) {
-            request({ uri: url, gzip: true })
-                .on('response', function (response) {
-                    console.log(response.statusCode)
-                    console.log(response.headers['content-type'])
-                    if (response.headers['content-type'] === 'text/csv') {
-                        var filename = regexp.exec(response.headers['content-disposition'])[1];
-                        console.log(filename);
-                        if (fsExistsSync(filename)) {
-                            console.log(filename + " already exists");
-                            resolve(filename);
-                        }
-                        else {
-                            var encoding = response.headers['content-encoding']
-                            var outStream = fs.createWriteStream(filename);
-                            console.log("downloading file " + filename);
-                            if (encoding == 'gzip') {
-                                response.pipe(zlib.createGunzip()).pipe(outStream)
-                            } else if (encoding == 'deflate') {
-                                response.pipe(zlib.createInflate()).pipe(outStream)
-                            } else {
-                                response.pipe(outStream)
-                            }
-                            response
-                                .on('error', reject)
-                                .on('close', function () {
-                                    resolve(filename);
-                                });
-                        }
-                    } else {
-                        reject(response.statusCode);
-                    }
-
-                });
-        })
-            .then(function (filename) {
-                console.log("downloaded csv");
-                return filename;
-            })
-            .then(function (filepath) {
-                console.log("converting to json");
-                return csv
-                    .convertFile(filepath);
-            })
-            .then(function (successData) {
-                console.log("convertion completed.");
-                console.log("Total images: " + successData.length);
-                var images = _.sampleSize(successData, 5);
-                _.forEach(images, function (image) {
-                    console.log('Sending: ' + image.image);
-                    bot.sendPhoto(chatId, request(image.image))
-                });
-            })
-            .catch(function (e) {
-                console.log(e);
-                bot.sendMessage(chatId, 'Error');
+        var options = {
+            uri: url, gzip: true
+        };
+        new requestPromise(options)
+            .then(function (contents, other) {
+                var response = contents[0];
+                console.log(other);
+                console.log(contents);
+                return response;
+            }).then(function (response) {
+                if (response.statusCode == 200) {
+                    return response.body;
+                }
+                return false;
             });
+            // .then(function (filename) {
+            //     console.log("downloaded csv");
+            //     return filename;
+            // })
+            // .then(function (filepath) {
+            //     console.log("converting to json");
+            //     return csv
+            //         .convertFile(filepath);
+            // })
+            // .then(function (successData) {
+            //     console.log("convertion completed.");
+            //     console.log("Total images: " + successData.length);
+            //     var images = _.sampleSize(successData, 5);
+            //     _.forEach(images, function (image) {
+            //         console.log('Sending: ' + image.image);
+            //         bot.sendPhoto(chatId, request(image.image))
+            //     });
+            // })
+            // .catch(function (e) {
+            //     console.log(e);
+            //     bot.sendMessage(chatId, 'Error');
+            // });
 
     };
 
