@@ -3,6 +3,7 @@
     var config = require('../config.js');
     var fs = require('fs');
     var request = require('request');
+    var zlib = require('zlib');
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
@@ -83,9 +84,17 @@
                             resolve(filename);
                         }
                         else {
+                            var encoding = response.headers['content-encoding']
+                            var outStream = fs.createWriteStream(filename);
                             console.log("downloading file " + filename);
+                            if (encoding == 'gzip') {
+                                response.pipe(zlib.createGunzip()).pipe(outStream)
+                            } else if (encoding == 'deflate') {
+                                response.pipe(zlib.createInflate()).pipe(outStream)
+                            } else {
+                                response.pipe(outStream)
+                            }
                             response
-                                .pipe(fs.createWriteStream(filename))
                                 .on('error', reject)
                                 .on('close', function () {
                                     resolve(filename);
