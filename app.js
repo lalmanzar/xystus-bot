@@ -9,7 +9,7 @@ var pluginsModules = require('require-all')(__dirname + '/modules');
 var bot = new TelegramBot(config.telegram.secretToken, config.telegram.options);
 bot.setWebHook(config.telegram.appUrl + '/' + config.telegram.secretToken, config.telegram.options.webHook.cert);
 
-_(pluginsModules).forEach(function(plugin){
+_.forEach(pluginsModules, function(plugin){
     if(_.isArray(plugin.regex)){
         _.forEach(plugin.regex, function(regex){
             bot.onText(regex, function (msg, match) {
@@ -21,7 +21,7 @@ _(pluginsModules).forEach(function(plugin){
             plugin.proccess(msg, bot)
         });
     }
-  }).value();
+  });
 
 var app = express();
 
