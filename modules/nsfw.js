@@ -77,9 +77,11 @@
                     var filename = regexp.exec(response.headers['content-disposition'])[1];
                     console.log(filename);
                     if (fsExistsSync(filename)) {
+                        console.log(filename + " already exists");
                         resolve(filename);
                     }
                     else {
+                        console.log("downloading file " + filename);
                         response
                             .pipe(fs.createWriteStream(filename))
                             .on('error', reject)
