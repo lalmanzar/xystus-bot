@@ -74,21 +74,26 @@
                 .on('response', function (response) {
                     console.log(response.statusCode)
                     console.log(response.headers['content-type'])
-                    var filename = regexp.exec(response.headers['content-disposition'])[1];
-                    console.log(filename);
-                    if (fsExistsSync(filename)) {
-                        console.log(filename + " already exists");
-                        resolve(filename);
+                    if (response.headers['content-type'] === 'text/csv') {
+                        var filename = regexp.exec(response.headers['content-disposition'])[1];
+                        console.log(filename);
+                        if (fsExistsSync(filename)) {
+                            console.log(filename + " already exists");
+                            resolve(filename);
+                        }
+                        else {
+                            console.log("downloading file " + filename);
+                            response
+                                .pipe(fs.createWriteStream(filename))
+                                .on('error', reject)
+                                .on('close', function () {
+                                    resolve(filename);
+                                });
+                        }
+                    } else {
+                        reject(response.statusCode + ": " + response.body);
                     }
-                    else {
-                        console.log("downloading file " + filename);
-                        response
-                            .pipe(fs.createWriteStream(filename))
-                            .on('error', reject)
-                            .on('close', function () {
-                                resolve(filename);
-                            });
-                    }
+
                 });
         })
             .then(function (filename) {
