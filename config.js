@@ -10,8 +10,12 @@
         },
         appUrl: process.env.APP_URL || ''
     };
+    var endpointSources = {
+        eporner: process.env.EPORNER || '' 
+    };
 
     module.exports = {
-        telegram: telegram
+        telegram: telegram,
+        endpointSources: endpointSources
     };
 })();

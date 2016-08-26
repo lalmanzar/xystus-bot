@@ -1,9 +1,11 @@
 /// <reference path="../typings/node/node.d.ts"/>
 (function () {
+    var config = require('../config.js');
     var request = require('request');
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
+    var csv  = require('node-csvjsonlite');
     var requestPromise = Promise.promisify(request);
 
     var sendNsfwMedia = function (imgType, bot, chatId) {
@@ -52,14 +54,36 @@
             });
     };
 
+    var sendRandomNsfwMedia = function (bot, chatId) {
+        var filename = config.endpointSources.eporner;
+        csv
+        .convert(filename)
+        .then(function(successData){
+            var images = _.sampleSize(successData, 5);
+            _.forEach(images, function(image) {
+                console.log('Sending: ' + image.image);
+                bot.sendPhoto(chatId, request(image.image))
+            });
+            console.log('This shouldn\'t show');
+        })
+        .catch(function (e) {
+            console.log(e);
+            bot.sendMessage(chatId, 'Error');
+        });
+    };
+
     module.exports = {
-        regex: [/^\/boobs\@?/i, /^\/butts\@?/i],
+        regex: [/^\/boobs\@?/i, /^\/butts\@?/i, /^\/random\@?/i],
         proccess: function (message, bot) {
-            var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
+            var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : message.text.indexOf('\/butts') === 0 ? 'obutts' : 'random';
             // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
             //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
             //   return;
             // }
+            if(imgType === 'random') {
+                sendRandomNsfwMedia(bot, message.chat.id);
+                return;
+            }
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
             _.times(5, function () {
                 sendNsfwMedia(imgType, bot, message.chat.id);
