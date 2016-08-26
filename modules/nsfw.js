@@ -13,8 +13,7 @@
 
     function fsExistsSync(myDir) {
         try {
-            fs.accessSync(myDir);
-            return true;
+            return fs.existsSync(myDir);
         } catch (e) {
             return false;
         }
