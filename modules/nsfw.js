@@ -70,7 +70,7 @@
         var url = config.endpointSources.eporner;
         console.log('Getting:' + url);
         new Promise(function (resolve, reject) {
-            request({ uri: url })
+            request.get(url)
                 .on('response', function (response) {
                     console.log(response.statusCode)
                     console.log(response.headers['content-type'])
