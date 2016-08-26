@@ -58,19 +58,35 @@
         var url = config.endpointSources.eporner;
         console.log('Getting:' + url);
         
-        csv
-        .convertURL(url)
-        .then(function(successData){
-            var images = _.sampleSize(successData, 5);
-            _.forEach(images, function(image) {
-                console.log('Sending: ' + image.image);
-                bot.sendPhoto(chatId, request(image.image))
+        var options = {
+            url: url
+        };
+
+        return requestPromise(options)
+            .then(function (contents) {
+                console.log("downloaded csv");
+                return contents;
+            })
+            .then(function(csvString){
+                console.log("converting to json");
+                return csv
+                    .convertString(csvString);                    
+            })
+            .then(function(successData){
+                console.log("convertion completed.");
+                console.log("Total images: " + successData.length);
+                var images = _.sampleSize(successData, 5);
+                _.forEach(images, function(image) {
+                    console.log('Sending: ' + image.image);
+                    bot.sendPhoto(chatId, request(image.image))
+                });
+            })
+            .catch(function (e) {
+                console.log(e);
+                bot.sendMessage(chatId, 'Error');
             });
-        })
-        .catch(function (e) {
-            console.log(e);
-            bot.sendMessage(chatId, 'Error');
-        });
+
+        
     };
 
     module.exports = {
