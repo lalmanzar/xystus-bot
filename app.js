@@ -7,7 +7,9 @@ var _ = require('lodash');
 var pluginsModules = require('require-all')(__dirname + '/modules');
 
 var bot = new TelegramBot(config.telegram.secretToken, config.telegram.options);
-bot.setWebHook(config.telegram.appUrl + '/' + config.telegram.secretToken, config.telegram.options.webHook.cert);
+bot.setWebHook(config.telegram.appUrl + '/' + config.telegram.secretToken, {
+  certificate: config.telegram.options.webHook.cert,
+});
 
 _.forEach(pluginsModules, function(plugin){
     if(_.isArray(plugin.regex)){
