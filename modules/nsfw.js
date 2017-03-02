@@ -64,61 +64,15 @@
             });
     };
 
-    var sendRandomNsfwMedia = function (bot, chatId) {
-
-        var url = config.endpointSources.eporner;
-        console.log('Getting:' + url);
-        var options = {
-            uri: url, gzip: true
-        };
-        new requestPromise(options)
-            .then(function (contents) {
-                var response = contents[0];
-                return response;
-            }).then(function (response) {
-                if (response.statusCode == 200) {
-                    return response.body;
-                }
-                return false;
-            })
-            .then(function (csvString) {
-                if (csvString) {
-                    return csv
-                        .convertString(csvString);
-                }
-                return false;
-            })
-            .then(function (successData) {
-                if (successData) {
-                    console.log("convertion completed.");
-                    console.log("Total images: " + successData.length);
-                    var images = _.sampleSize(successData, 5);
-                    _.forEach(images, function (image) {
-                        console.log('Sending: ' + image.image);
-                        bot.sendPhoto(chatId, request(image.image))
-                    });
-                }
-            })
-            .catch(function (e) {
-                console.log(e);
-                bot.sendMessage(chatId, 'Error');
-            });
-
-    };
-
     module.exports = {
-        regex: [/^\/boobs\@?/i, /^\/butts\@?/i, /^\/random\@?/i],
+        regex: [/^\/boobs\@?/i, /^\/butts\@?/i],
         proccess: function (message, bot) {
-            var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : message.text.indexOf('\/butts') === 0 ? 'obutts' : 'random';
+            var imgType = message.text.indexOf('\/boobs') === 0 ? 'oboobs' : 'obutts';
             // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
             //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
             //   return;
             // }
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
-            if (imgType === 'random') {
-                sendRandomNsfwMedia(bot, message.chat.id);
-                return;
-            }
             _.times(5, function () {
                 sendNsfwMedia(imgType, bot, message.chat.id);
             });
