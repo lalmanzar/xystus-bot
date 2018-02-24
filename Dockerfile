@@ -1,4 +1,4 @@
-FROM node:0.10
+FROM node:0.9
 MAINTAINER Luis Almanzar <ruisu15@gmail.com>
 
 ADD package.json /tmp/package.json
