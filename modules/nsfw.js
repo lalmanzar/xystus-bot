@@ -39,9 +39,9 @@
                 }
             }).then(function (imagePreview) {
                 var url = 'http://media.' + imgType + '.ru/' + imagePreview.replace('_preview', '');
-                return requestPromise(url).then(function (contents) {
-                    console.log(contents[0].statusCode);
-                    if (contents[0].statusCode == 200) {
+                return requestPromise(url).then(function (response) {
+                    console.log(response.statusCode);
+                    if (response.statusCode == 200) {
                         console.log(url);
                         return bot.sendPhoto(chatId, request(url)).then(function () {
                             console.log("success sending " + url);
