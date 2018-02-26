@@ -28,11 +28,7 @@
         };
         console.log('working with ' + options.url);
         return requestPromise(options)
-            .then(function (contents) {
-                console.log(contents);
-                var response = contents[0];
-                return response;
-            }).then(function (response) {
+            .then(function (response) {
                 if (response.statusCode == 200) {
                     return JSON.parse(response.body)
                 }
