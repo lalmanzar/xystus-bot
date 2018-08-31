@@ -18,12 +18,12 @@
         }
     }
 
-    var sendNsfwMedia = function (imgType, bot, chatId) {
+    var sendNsfwMedia = function (imgType, imgTypeHost, bot, chatId) {
         var options = {
             url: URL.format({
                 protocol: 'http',
-                host: 'api.' + imgType + '.ru',
-                pathname: '/noise/1'
+                host: 'api.' + imgTypeHost + '.ru',
+                pathname: '/' + imgType + '/0/1/random'
             })
         };
         console.log('working with ' + options.url);
@@ -38,7 +38,7 @@
                     return imageArray[0].preview;
                 }
             }).then(function (imagePreview) {
-                var url = 'http://media.' + imgType + '.ru/' + imagePreview.replace('_preview', '');
+                var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
                 return requestPromise(url).then(function (response) {
                     console.log(response.statusCode);
                     if (response.statusCode == 200) {
@@ -47,7 +47,7 @@
                             console.log("success sending " + url);
                         });
                     } else {
-                        url = 'http://media.' + imgType + '.ru/' + imagePreview;
+                        url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview;
                         console.log(url);
                         return bot.sendPhoto(chatId, request(url)).then(function () {
                             console.log("success sending " + url);
@@ -64,14 +64,15 @@
     module.exports = {
         regex: [/^\/boobs\@?/i, /^\/butts\@?/i],
         proccess: function (message, bot) {
-            var imgType = /^\/boobs\@?/i.test(message.text) ? 'oboobs' : 'obutts';
+            var imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts';
+            var imgTypeHost = /^\/boobs\@?/i.test(message.text) ? 'oboobs' : 'obutts';
             // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
             //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
             //   return;
             // }
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
             _.times(5, function () {
-                sendNsfwMedia(imgType, bot, message.chat.id);
+                sendNsfwMedia(imgType, imgTypeHost, bot, message.chat.id);
             });
         }
     };
