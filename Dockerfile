@@ -1,4 +1,4 @@
-FROM node:9
+FROM mhart/alpine-node:8
 MAINTAINER Luis Almanzar <ruisu15@gmail.com>
 
 ADD package.json /tmp/package.json
