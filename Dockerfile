@@ -1,13 +1,12 @@
 FROM mhart/alpine-node:8
-MAINTAINER Luis Almanzar <ruisu15@gmail.com>
+WORKDIR /app
+COPY package.json ./
+RUN npm install
 
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
-
-WORKDIR /opt/app
-ADD . /opt/app
- 
+FROM mhart/alpine-node:base-8
+WORKDIR /app
+COPY --from=0 /app .
+COPY . .
 ENV PORT 80
 EXPOSE 80
 EXPOSE 443
