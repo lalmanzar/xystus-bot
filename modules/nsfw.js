@@ -6,17 +6,7 @@
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
-    var csv = require('node-csvjsonlite');
     var requestPromise = Promise.promisify(request);
-    var regexp = /filename=\"(.*)\"/gi;
-
-    function fsExistsSync(myDir) {
-        try {
-            return fs.existsSync(myDir);
-        } catch (e) {
-            return false;
-        }
-    }
 
     var sendNsfwMedia = function (imgType, imgTypeHost, bot, chatId) {
         var options = {
@@ -39,21 +29,9 @@
                 }
             }).then(function (imagePreview) {
                 var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
-                return requestPromise(url).then(function (response) {
-                    console.log(response.statusCode);
-                    if (response.statusCode == 200) {
-                        console.log(url);
-                        return bot.sendPhoto(chatId, request(url)).then(function () {
+                return bot.sendPhoto(chatId, url).then(function () {
                             console.log("success sending " + url);
                         });
-                    } else {
-                        url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview;
-                        console.log(url);
-                        return bot.sendPhoto(chatId, request(url)).then(function () {
-                            console.log("success sending " + url);
-                        });
-                    }
-                });
             })
             .catch(function (e) {
                 console.log(e);
@@ -66,10 +44,7 @@
         proccess: function (message, bot) {
             var imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts';
             var imgTypeHost = /^\/boobs\@?/i.test(message.text) ? 'oboobs' : 'obutts';
-            // if (imgType === 'oboobs' && !_.isEmpty(message.chat.title)) {
-            //   bot.sendMessage(message.chat.id, 'If you want boobs ask on a private chat. Boobs are not available for groups.');
-            //   return;
-            // }
+            
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
             _.times(5, function () {
                 sendNsfwMedia(imgType, imgTypeHost, bot, message.chat.id);
