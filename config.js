@@ -4,8 +4,8 @@
         options: {
             webHook: {
                 port: process.env.TELEGRAM_WEBHOOK_PORT || 443,
-                key: __dirname + '/bin/sslcert/key.pem',
-                cert: __dirname + '/bin/sslcert/crt.pem'
+                key: (process.env.CERTIFICATE_PATH || (__dirname + '/bin/sslcert/')) + 'key.pem',
+                cert: (process.env.CERTIFICATE_PATH || (__dirname + '/bin/sslcert/')) + 'crt.pem'
             }
         },
         appUrl: process.env.APP_URL || ''
