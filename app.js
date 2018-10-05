@@ -37,6 +37,12 @@ app.get('/', function (req, res, next) {
   res.send('Xystus\' bot says: Hello!');
 });
 
+app.post(`/bot${TOKEN}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.sendStatus(200);
+});
+
+  
 app.get('/me', function (req, res, next) {
   bot.getMe().then(function (me) {
     res.send('Hi my name is '+ me.first_name +'!');
