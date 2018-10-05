@@ -22,9 +22,6 @@ console.log(config);
 //   ca: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`)
 // };
 
-
-console.log(options);
-
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
