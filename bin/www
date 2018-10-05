@@ -14,13 +14,12 @@ const fs    = require('fs');
 /**
  * Get port from environment and store in Express.
  */
-console.log(config);
 
-// const options = {
-//   key: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`),
-//   cert: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/fullchain1.pem`),
-//   ca: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`)
-// };
+const options = {
+  key: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`),
+  cert: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/fullchain1.pem`),
+  ca: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`)
+};
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -30,7 +29,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-// const serverSSL = https.createServer(options, app);
+const serverSSL = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -40,9 +39,9 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-// serverSSL.listen(443);
-// serverSSL.on('error', onError);
-// serverSSL.on('listening', onListening);
+serverSSL.listen(443);
+serverSSL.on('error', onError);
+serverSSL.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
