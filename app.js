@@ -37,7 +37,7 @@ app.get('/', function (req, res, next) {
   res.send('Xystus\' bot says: Hello!');
 });
 
-app.post(`/bot${TOKEN}`, (req, res) => {
+app.post(`/bot${config.telegram.secretToken}`, (req, res) => {
     bot.processUpdate(req.body);
     res.sendStatus(200);
 });
