@@ -4,20 +4,19 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var config = require('../config');
-var debug = require('debug')('xystus-bot:server');
-var http = require('http');
-const https = require('https');
-const fs    = require('fs');
+var app = require("../app");
+var config = require("../config");
+var debug = require("debug")("xystus-bot:server");
+var http = require("http");
+const https = require("https");
+const fs = require("fs");
 
 /**
  * Get port from environment and store in Express.
  */
 
-
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+var port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
 
 /**
  * Create HTTP server.
@@ -25,20 +24,31 @@ app.set('port', port);
 
 var server = http.createServer(app);
 server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);
 
-fs.exists(`/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`,function(exists){
-  const options = {
-    key: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`),
-    cert: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/fullchain1.pem`),
-    ca: fs.readFileSync(`/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`)
-  };
-  const serverSSL = https.createServer(options, app);
-  serverSSL.listen(443);
-  serverSSL.on('error', onError);
-  serverSSL.on('listening', onListening);
-});
+fs.exists(
+  `/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`,
+  function(exists) {
+    if (exists) {
+      const options = {
+        key: fs.readFileSync(
+          `/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`
+        ),
+        cert: fs.readFileSync(
+          `/etc/letsencrypt/archive/${config.telegram.appUrl}/fullchain1.pem`
+        ),
+        ca: fs.readFileSync(
+          `/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`
+        )
+      };
+      const serverSSL = https.createServer(options, app);
+      serverSSL.listen(443);
+      serverSSL.on("error", onError);
+      serverSSL.on("listening", onListening);
+    }
+  }
+);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -65,22 +75,20 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+    case "EACCES":
+      console.error(bind + " requires elevated privileges");
       process.exit(1);
       break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+    case "EADDRINUSE":
+      console.error(bind + " is already in use");
       process.exit(1);
       break;
     default:
@@ -94,8 +102,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
+  debug("Listening on " + bind);
 }
