@@ -25,7 +25,7 @@ _.forEach(pluginsModules, function(plugin){
 
 var app = express();
 
-app.use(express.static(path.join(__dirname, 'static'), { dotfiles: 'allow' } ));
+app.use(express.static('static', { dotfiles: 'allow' } ));
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
