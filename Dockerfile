@@ -1,5 +1,6 @@
 FROM mhart/alpine-node:8
 WORKDIR /app
+RUN mkdir -p /app/static
 COPY package.json ./
 RUN npm install
 
