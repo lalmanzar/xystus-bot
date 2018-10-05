@@ -6,10 +6,8 @@ var TelegramBot = require('node-telegram-bot-api')
 var _ = require('lodash');
 var pluginsModules = require('require-all')(__dirname + '/modules');
 
-var bot = new TelegramBot(config.telegram.secretToken, config.telegram.options);
-bot.setWebHook(`https://${config.telegram.appUrl}/bot${config.telegram.secretToken}`, {
-  certificate: config.telegram.options.webHook.cert,
-});
+var bot = new TelegramBot(config.telegram.secretToken);
+bot.setWebHook(`https://${config.telegram.appUrl}/bot${config.telegram.secretToken}`);
 
 _.forEach(pluginsModules, function(plugin){
     if(_.isArray(plugin.regex)){
