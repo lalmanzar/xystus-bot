@@ -40,8 +40,12 @@
     };
 
     module.exports = {
-        regex: [/^\/boobs\@?/i, /^\/butts\@?/i],
+        regex: [/^\/boobs\@?/i, /^\/butts\@?/i, /teta/i],
         proccess: function (message, bot) {
+            if(/teta/i.test(message.text)) {
+                sendNsfwMedia('boobs', 'oboobs', bot, message.chat.id);
+                return;
+            }
             var imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts';
             var imgTypeHost = /^\/boobs\@?/i.test(message.text) ? 'oboobs' : 'obutts';
             
