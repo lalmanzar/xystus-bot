@@ -33,13 +33,13 @@ fs.exists(
     if (exists) {
       const options = {
         key: fs.readFileSync(
-          `/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`
+          `/etc/letsencrypt/live/${config.telegram.appUrl}/privkey.pem`
         ),
         cert: fs.readFileSync(
-          `/etc/letsencrypt/archive/${config.telegram.appUrl}/fullchain1.pem`
+          `/etc/letsencrypt/live/${config.telegram.appUrl}/fullchain.pem`
         ),
         ca: fs.readFileSync(
-          `/etc/letsencrypt/archive/${config.telegram.appUrl}/chain1.pem`
+          `/etc/letsencrypt/live/${config.telegram.appUrl}/chain.pem`
         )
       };
       const serverSSL = https.createServer(options, app);
