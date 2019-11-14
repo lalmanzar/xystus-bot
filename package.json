@@ -13,7 +13,7 @@
     "lodash": "^4.15.0",
     "morgan": "~1.5.3",
     "node-csvjsonlite": "^1.1.4",
-    "node-telegram-bot-api": "^0.40.0",
+    "node-telegram-bot-api": "git+https://github.com/lalmanzar/node-telegram-bot-api.git",
     "request": "=2.58.0",
     "require-all": "^1.1.0"
   }
