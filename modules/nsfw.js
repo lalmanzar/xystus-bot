@@ -53,14 +53,13 @@
         return requestPromise(options)
             .then(function(response) {
                 if (response.statusCode == 200) {
-                    console.log(response.body)
                     return response.body;
                 }
                 return false
             })
             .then(function(imageArray) {
                 if (imageArray) {
-                    return _.chain(response)
+                    return _.chain(imageArray)
                         .map(x => x[3])
                         .flatten()
                         .compact()
