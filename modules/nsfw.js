@@ -88,9 +88,9 @@
                 if (!_.includes(image, 'http')) {
                     image = 'https://scrolller.com/media/' + image
                 }
-                console.log('sending ' + url);
+                console.log('sending ' + image);
                 return bot.sendAnimation(chatId, image).then(function() {
-                    console.log('success sending ' + url)
+                    console.log('success sending ' + image)
                 })
             })
             .catch(function(e) {
