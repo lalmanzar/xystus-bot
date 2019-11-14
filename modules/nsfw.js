@@ -2,11 +2,80 @@
 (function () {
     var config = require('../config.js');
     var fs = require('fs');
-    var request = require('request');
     var _ = require('lodash');
     var Promise = require("bluebird");
     var URL = require('url');
-    var requestPromise = Promise.promisify(request);
+    var requestPromise = Promise.promisify(require('request'));
+
+    var sendNsfwAnimatedMedia = function (imgType, bot, chatId) {
+        if(imgType !== 'butts') {
+            return;
+        }
+        var options = {
+            method: 'POST',
+            url: URL.format({
+                protocol: 'https',
+                host: 'scrolller.com',
+                pathname: '/api/gifs'
+            }),
+        };
+
+        var categories = [
+            937,
+            945,
+            966,
+            1023,
+            1033,
+            1034,
+            1040,
+            1051,
+            1075,
+            5101,
+            6036,
+            7590,
+            13532,
+            29999,
+            448707,
+            554685,
+            557904,
+            585732,
+            626993,
+            630864,
+            631257,
+            665350,
+            809789
+        ];
+
+        var page = _.random(0,100) * 10;
+        var payload = _.map(categories, x=> [x,0,page, 10]);
+        options.json = payload;
+        console.log('working with butts gif');
+        return requestPromise(options)
+            .then(function (response) {
+                if (response.statusCode == 200) {
+                    return JSON.parse(response.body)
+                }
+                return false;
+            }).then(function (imageArray) {
+                if (imageArray) {
+                    return _.chain(response).map(x=>x[3]).flatten().map(x=>x[3]).flatten().map(x=>x[1]).map(x=>_.find(x, y=> 
+                        (_.isArray(y[0]) && _.includes(y[0][1], '.mp4')  ) || _.includes(y[0], '.mp4')  ))
+                        .compact().map(x=>x[0]).map(x=> _.isArray(x) ? x[1] : x).sample().value();
+                }
+            }).then(function (image) {
+                if(!_.includes(image, 'http')){
+                    image = 'https://scrolller.com/media/' + image;
+                }
+                var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
+                return bot.sendPhoto(chatId, url).then(function () {
+                            console.log("success sending " + url);
+                        });
+            })
+            .catch(function (e) {
+                console.log(e);
+                bot.sendMessage(chatId, 'Error');
+            });
+    };
 
     var sendNsfwMedia = function (imgType, imgTypeHost, bot, chatId) {
         var options = {
@@ -29,7 +98,7 @@
                 }
             }).then(function (imagePreview) {
                 var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
-                return bot.sendPhoto(chatId, url).then(function () {
+                return bot.sendAnimation(chatId, url).then(function () {
                             console.log("success sending " + url);
                         });
             })
@@ -55,6 +124,7 @@
             
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
             _.times(5, function () {
+                sendNsfwAnimatedMedia(imgType, bot, message.chat.id);
                 sendNsfwMedia(imgType, imgTypeHost, bot, message.chat.id);
             });
         }
