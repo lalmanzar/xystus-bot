@@ -67,7 +67,7 @@
                     image = 'https://scrolller.com/media/' + image;
                 }
                 var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
-                return bot.sendPhoto(chatId, url).then(function () {
+                return bot.sendAnimation(chatId, url).then(function () {
                             console.log("success sending " + url);
                         });
             })
@@ -98,7 +98,7 @@
                 }
             }).then(function (imagePreview) {
                 var url = 'http://media.' + imgTypeHost + '.ru/' + imagePreview.replace('_preview', '');
-                return bot.sendAnimation(chatId, url).then(function () {
+                return bot.sendPhoto(chatId, url).then(function () {
                             console.log("success sending " + url);
                         });
             })
