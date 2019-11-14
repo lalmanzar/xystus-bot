@@ -9,7 +9,7 @@
 
     var sendNsfwAnimatedMedia = function(imgType, bot, chatId) {
         if (imgType !== 'butts') {
-            return
+            return Promise.resolve(false);
         }
         var options = {
             method: 'POST',
