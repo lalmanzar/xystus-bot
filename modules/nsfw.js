@@ -46,8 +46,8 @@
             809789,
         ]
 
-        var page = _.random(0, 100) * 10
-        var payload = _.map(categories, x => [x, 0, page, 10])
+        var page = _.random(0, 100) * 2
+        var payload = _.map(categories, x => [x, 0, page, 2])
         options.json = payload
         console.log('working with butts gif')
         return requestPromise(options)
@@ -80,6 +80,7 @@
                         .compact()
                         .map(x => x[0])
                         .map(x => (_.isArray(x) ? x[1] : x))
+                        .compact()
                         .sample()
                         .value()
                 }
@@ -154,7 +155,7 @@
 
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.')
             sendNsfwAnimatedMedia(imgType, bot, message.chat.id).finally(() =>
-                _.times(5, function() {
+                _.times(2, function() {
                     sendNsfwMedia(imgType, imgTypeHost, bot, message.chat.id)
                 })
             )
