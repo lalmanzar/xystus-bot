@@ -123,8 +123,8 @@
             var imgTypeHost = /^\/boobs\@?/i.test(message.text) ? 'oboobs' : 'obutts';
             
             bot.sendMessage(message.chat.id, '👀 Ok. let me get that.');
+            sendNsfwAnimatedMedia(imgType, bot, message.chat.id);
             _.times(5, function () {
-                sendNsfwAnimatedMedia(imgType, bot, message.chat.id);
                 sendNsfwMedia(imgType, imgTypeHost, bot, message.chat.id);
             });
         }
