@@ -88,12 +88,8 @@
                 if (!_.includes(image, 'http')) {
                     image = 'https://scrolller.com/media/' + image
                 }
-                var url =
-                    'http://media.' +
-                    imgTypeHost +
-                    '.ru/' +
-                    imagePreview.replace('_preview', '')
-                return bot.sendAnimation(chatId, url).then(function() {
+                console.log('sending ' + url);
+                return bot.sendAnimation(chatId, image).then(function() {
                     console.log('success sending ' + url)
                 })
             })
