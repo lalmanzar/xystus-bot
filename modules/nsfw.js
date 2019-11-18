@@ -7,7 +7,8 @@
     var URL = require('url')
     var requestPromise = Promise.promisify(require('request'))
 
-    var sendNsfwAnimatedMedia = function(imgType, bot, chatId) {
+    var sendNsfwAnimatedMedia = function(imgType, bot, chatId, retries) {
+        retries = retries || 0;
         if (imgType !== 'butts') {
             return Promise.resolve(false);
         }
@@ -95,8 +96,11 @@
                 })
             })
             .catch(function(e) {
-                console.log(e)
-                bot.sendMessage(chatId, 'Error')
+                if(retries < 3) {
+                    return sendNsfwAnimatedMedia(imgType, bot, chatId, retries + 1);
+                } else {
+                    bot.sendMessage(chatId, 'Error')
+                }
             })
     }
 
@@ -145,7 +149,14 @@
                 return
             }
             if (/culo/i.test(message.text)) {
-                sendNsfwMedia('butts', 'obutts', bot, message.chat.id)
+                var randomNum = _.random(0, 100);
+
+                if (randomNum > 90) {
+                    sendNsfwAnimatedMedia('butts', bot, message.chat.id);
+                } else {
+                    sendNsfwMedia('butts', 'obutts', bot, message.chat.id)
+                }
+
                 return
             }
             var imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts'
