@@ -28,7 +28,7 @@ server.on("error", onError);
 server.on("listening", onListening);
 
 fs.exists(
-  `/etc/letsencrypt/archive/${config.telegram.appUrl}/privkey1.pem`,
+  `/etc/letsencrypt/live/${config.telegram.appUrl}/privkey.pem`,
   function(exists) {
     if (exists) {
       const options = {
