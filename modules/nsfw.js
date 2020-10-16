@@ -16,7 +16,7 @@
             method: 'POST',
             url: URL.format({
                 protocol: 'https',
-                host: 'scrolller.com',
+                host: 'old.scrolller.com',
                 pathname: '/api/gifs',
             }),
         }
