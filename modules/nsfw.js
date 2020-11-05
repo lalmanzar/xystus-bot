@@ -15,9 +15,9 @@
         var options = {
             method: 'POST',
             url: URL.format({
-                protocol: 'http',
-                host: 'old.scrolller.com',
-                pathname: '/api/gifs',
+                protocol: config.scrolller.protocol,
+                host: config.scrolller.apiUrl,
+                pathname: config.scrolller.path,
             }),
         }
 
