@@ -1,4 +1,3 @@
-/// <reference path="../typings/node/node.d.ts"/>
 (function () {
   var _ = require('lodash');
 
@@ -27,8 +26,8 @@
 
   module.exports = {
     regex: /pizza/i,
-    proccess: function (message, bot) {
-      bot.sendMessage(message.chat.id, _.sample(pizzaQuotes).concat(' 🍕😄'));
+    execute: function (message, bot) {
+      return bot.sendMessage(message.chat.id, _.sample(pizzaQuotes).concat(' 🍕😄'));
     }
   };
 })();
