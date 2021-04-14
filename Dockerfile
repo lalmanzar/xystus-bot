@@ -1,8 +1,5 @@
 FROM mhart/alpine-node:latest
-RUN apk update && apk upgrade && \
-    apk add --no-cache bash git openssh
 WORKDIR /app
-RUN mkdir -p /app/static
 COPY package.json ./
 RUN npm install
 
