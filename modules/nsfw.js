@@ -129,7 +129,6 @@
         execute: function (message, bot) {
             if (/teta/i.test(message.text)) {
                 sendNsfwMedia('boobs', 'oboobs', bot, message.chat.id)
-                return Promise.resolve(false);
             }
             if (/culo/i.test(message.text)) {
                 const randomNum = _.random(0, 100);
@@ -139,7 +138,8 @@
                 } else {
                     sendNsfwMedia('butts', 'obutts', bot, message.chat.id)
                 }
-
+            }
+            if (/teta/i.test(message.text) || /culo/i.test(message.text)) {
                 return Promise.resolve(false);
             }
             const imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts';
