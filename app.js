@@ -16,7 +16,7 @@ bot.setWebHook(`https://${config.telegram.appUrl}/bot${config.telegram.secretTok
             if (_.isArray(plugin.regex)) {
                 _.forEach(plugin.regex, function (regex) {
                     bot.onText(regex, function (msg) {
-                        plugin.execute(msg, bot);
+                        plugin.execute(msg, bot, regex);
                     });
                 });
             } else if (_.isRegExp(plugin.regex)) {
