@@ -126,11 +126,12 @@
 
     module.exports = {
         regex: [/^\/boobs\@?/i, /^\/butts\@?/i, /teta/i, /culo/i],
-        execute: function (message, bot) {
-            if (/teta/i.test(message.text)) {
+        execute: function (message, bot, matchedRegex) {
+            if (String(matchedRegex) === String(/teta/i)) {
                 sendNsfwMedia('boobs', 'oboobs', bot, message.chat.id)
+                return Promise.resolve(false);
             }
-            if (/culo/i.test(message.text)) {
+            if (String(matchedRegex) === String(/culo/i)) {
                 const randomNum = _.random(0, 100);
 
                 if (randomNum > 30) {
@@ -138,10 +139,9 @@
                 } else {
                     sendNsfwMedia('butts', 'obutts', bot, message.chat.id)
                 }
-            }
-            if (/teta/i.test(message.text) || /culo/i.test(message.text)) {
                 return Promise.resolve(false);
             }
+            
             const imgType = /^\/boobs\@?/i.test(message.text) ? 'boobs' : 'butts';
             const imgTypeHost = /^\/boobs\@?/i.test(message.text)
                 ? 'oboobs'
